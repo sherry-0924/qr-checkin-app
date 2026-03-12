@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>カクイチ社食レジ</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 20px; }
+        video { width: 100%; max-width: 400px; border: 2px solid #333; border-radius: 10px; }
+        button { font-size: 18px; padding: 12px 20px; margin: 16px 0; }
+    </style>
+</head>
+<body>
+    <h1>🍴 社食レジ・カメラテスト</h1>
+    <button id="startBtn">カメラを起動</button>
+    <br>
+    <video id="video" autoplay playsinline></video>
+    <p id="msg">ボタンを押してカメラを起動してください</p>
+
+    <script>
+        const video = document.getElementById('video');
+        const msg = document.getElementById('msg');
+        const startBtn = document.getElementById('startBtn');
+
+        startBtn.addEventListener('click', async () => {
+            try {
+                msg.innerText = "カメラを起動しています...";
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: "environment" },
+                    audio: false
+                });
+                video.srcObject = stream;
+                msg.innerText = "✅ カメラ起動成功！";
+            } catch (err) {
+                msg.innerText = "❌ エラー: " + err.name;
+                console.error(err);
+            }
+        });
+    </script>
+</body>
+</html>
