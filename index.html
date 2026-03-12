@@ -48,6 +48,7 @@
       color: #0a7a2f;
       white-space: pre-line;
       word-break: break-all;
+      min-height: 2em;
     }
   </style>
 </head>
@@ -85,16 +86,24 @@
     let resetTimer = null;
 
     async function sendToGas(employeeId) {
-      const response = await fetch(GAS_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "text/plain;charset=utf-8"
-        },
-        body: JSON.stringify({ employeeId })
-      });
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-      const text = await response.text();
-      return JSON.parse(text);
+      try {
+        const response = await fetch(GAS_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+          },
+          body: JSON.stringify({ employeeId }),
+          signal: controller.signal
+        });
+
+        const text = await response.text();
+        return JSON.parse(text);
+      } finally {
+        clearTimeout(timeoutId);
+      }
     }
 
     async function loadCameras() {
@@ -126,10 +135,14 @@
       }
     }
 
-    function resetForNextScan() {
-      result.innerText = "";
-      msg.innerText = "次のQRを読み取ってください";
-      isProcessing = false;
+    function scheduleReset() {
+      if (resetTimer) clearTimeout(resetTimer);
+
+      resetTimer = setTimeout(() => {
+        result.innerText = "";
+        msg.innerText = "次のQRを読み取ってください";
+        isProcessing = false;
+      }, 2500);
     }
 
     async function startScanner() {
@@ -145,8 +158,8 @@
           return;
         }
 
-        msg.innerText = "カメラを起動しています...";
         result.innerText = "";
+        msg.innerText = "カメラを起動しています...";
 
         if (!html5QrCode) {
           html5QrCode = new Html5Qrcode("reader");
@@ -163,25 +176,25 @@
             isProcessing = true;
 
             try {
-              result.innerText = "読み取り結果: " + decodedText;
+              result.innerText = "読み取りました";
               msg.innerText = "送信しています...";
 
               const res = await sendToGas(decodedText);
 
               if (res.ok) {
-  result.innerText = "登録しました";
-  msg.innerText = "✅ 登録完了";
-} else {
-  result.innerText = "";
-  msg.innerText = "❌ 登録できませんでした";
-}
+                result.innerText = "登録しました";
+                msg.innerText = "✅ 登録完了";
+              } else {
+                result.innerText = "";
+                msg.innerText = "❌ 登録できませんでした";
+              }
             } catch (err) {
               console.error(err);
-              msg.innerText = "❌ 送信エラー";
+              result.innerText = "";
+              msg.innerText = "❌ 登録できませんでした";
+            } finally {
+              scheduleReset();
             }
-
-            if (resetTimer) clearTimeout(resetTimer);
-            resetTimer = setTimeout(resetForNextScan, 2500);
           },
           () => {
             // 読み取り失敗時は何もしない
@@ -206,7 +219,13 @@
         await html5QrCode.stop();
         isRunning = false;
         isProcessing = false;
-        if (resetTimer) clearTimeout(resetTimer);
+
+        if (resetTimer) {
+          clearTimeout(resetTimer);
+          resetTimer = null;
+        }
+
+        result.innerText = "";
         msg.innerText = "⏹ 停止しました";
       } catch (err) {
         console.error(err);
