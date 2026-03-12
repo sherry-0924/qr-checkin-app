@@ -169,12 +169,12 @@
               const res = await sendToGas(decodedText);
 
               if (res.ok) {
-                result.innerText = `社員番号: ${res.employeeId}\n氏名: ${res.name}`;
-                msg.innerText = `✅ 登録完了: ${res.name}`;
-              } else {
-                result.innerText = "読み取り結果: " + decodedText;
-                msg.innerText = "❌ " + res.message;
-              }
+  result.innerText = "登録しました";
+  msg.innerText = "✅ 登録完了";
+} else {
+  result.innerText = "";
+  msg.innerText = "❌ 登録できませんでした";
+}
             } catch (err) {
               console.error(err);
               msg.innerText = "❌ 送信エラー";
