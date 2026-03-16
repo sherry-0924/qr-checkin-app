@@ -38,21 +38,10 @@
       transition: background 0.25s ease;
     }
 
-    .screen.state-normal {
-      --bg: #f7f3ea;
-    }
-
-    .screen.state-success {
-      --bg: #d8ef2d;
-    }
-
-    .screen.state-error {
-      --bg: #ef533f;
-    }
-
-    .screen.state-duplicate {
-      --bg: #efc94a;
-    }
+    .screen.state-normal { --bg: #f7f3ea; }
+    .screen.state-success { --bg: #d8ef2d; }
+    .screen.state-error { --bg: #ef533f; }
+    .screen.state-duplicate { --bg: #efc94a; }
 
     .topbar {
       text-align: center;
@@ -106,6 +95,7 @@
       height: 100% !important;
       object-fit: cover !important;
       border-radius: 4px;
+      transform: scaleX(1) !important;
     }
 
     .corner {
@@ -415,9 +405,9 @@
         });
 
         const options = Array.from(cameraSelect.options);
-        const rearOption = options.find(opt => !/front/i.test(opt.textContent));
-        if (rearOption) {
-          cameraSelect.value = rearOption.value;
+        const frontOption = options.find(opt => /front/i.test(opt.textContent));
+        if (frontOption) {
+          cameraSelect.value = frontOption.value;
         }
       } catch (err) {
         console.error(err);
@@ -429,7 +419,7 @@
       resetTimer = setTimeout(() => {
         isProcessing = false;
         setNormalView();
-      }, 2200);
+      }, 1800);
     }
 
     async function startScanner() {
