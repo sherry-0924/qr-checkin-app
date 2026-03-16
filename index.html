@@ -8,68 +8,224 @@
   <script src="https://unpkg.com/html5-qrcode"></script>
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: sans-serif;
+      margin: 0;
+      font-family: "Hiragino Maru Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+      background:
+        radial-gradient(circle at top left, #ffe08a 0%, transparent 22%),
+        radial-gradient(circle at top right, #ffb3c7 0%, transparent 25%),
+        radial-gradient(circle at bottom left, #9be7ff 0%, transparent 22%),
+        linear-gradient(180deg, #fff8e7 0%, #ffeef5 100%);
+      color: #5b3b00;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+    }
+
+    .header {
       text-align: center;
-      padding: 20px;
+      margin-bottom: 18px;
     }
 
-    h1 {
-      margin-bottom: 12px;
+    .header h1 {
+      margin: 0;
+      font-size: 34px;
+      line-height: 1.2;
+      color: #ff6b6b;
+      text-shadow: 0 2px 0 #fff;
     }
 
-    #controls {
-      margin: 16px 0;
+    .header p {
+      margin: 10px 0 0;
+      font-size: 15px;
+      color: #7a5a00;
+      font-weight: 700;
     }
 
-    select, button {
+    .card {
+      background: #ffffffcc;
+      backdrop-filter: blur(6px);
+      border: 3px solid #fff;
+      border-radius: 24px;
+      padding: 18px;
+      box-shadow: 0 10px 24px rgba(255, 107, 107, 0.18);
+      margin-bottom: 16px;
+    }
+
+    .label {
+      display: block;
+      font-size: 15px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: #ff6b6b;
+    }
+
+    select {
+      width: 100%;
+      border: 3px solid #ffd166;
+      border-radius: 16px;
+      padding: 14px 16px;
       font-size: 16px;
-      padding: 10px 14px;
-      margin: 6px;
-      max-width: 90%;
+      background: #fffdf7;
+      color: #5b3b00;
+      font-weight: 700;
+      outline: none;
+    }
+
+    .button-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    button {
+      border: none;
+      border-radius: 18px;
+      padding: 16px 16px;
+      font-size: 18px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.05s ease, opacity 0.2s ease;
+      box-shadow: 0 6px 0 rgba(0,0,0,0.08);
+    }
+
+    button:active {
+      transform: translateY(2px);
+      box-shadow: 0 3px 0 rgba(0,0,0,0.08);
+    }
+
+    .start-btn {
+      background: linear-gradient(180deg, #7ee787 0%, #2ecc71 100%);
+      color: #fff;
+    }
+
+    .stop-btn {
+      background: linear-gradient(180deg, #ffd6a5 0%, #ffad66 100%);
+      color: #7a3900;
+    }
+
+    .status-card {
+      text-align: center;
+      padding: 18px;
+    }
+
+    .status-badge {
+      display: inline-block;
+      min-width: 220px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      font-size: 19px;
+      font-weight: 900;
+      background: #fff3b0;
+      color: #8a5a00;
+      border: 3px solid #fff;
+    }
+
+    .result-card {
+      text-align: center;
+      min-height: 110px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, #ffffff 0%, #fff8ef 100%);
+    }
+
+    #result {
+      font-size: 30px;
+      font-weight: 900;
+      color: #00a896;
+      white-space: pre-line;
+      word-break: break-word;
+      text-shadow: 0 2px 0 #fff;
     }
 
     #reader {
       width: 100%;
-      max-width: 400px;
-      margin: 20px auto;
+      max-width: 420px;
+      margin: 0 auto;
+      overflow: hidden;
+      border-radius: 20px;
     }
 
-    #msg {
-      margin-top: 12px;
-      font-size: 16px;
-      white-space: pre-line;
+    .reader-card {
+      padding: 14px;
+      background: linear-gradient(180deg, #ffffff 0%, #eefcff 100%);
     }
 
-    #result {
-      margin-top: 20px;
-      font-size: 20px;
-      font-weight: bold;
-      color: #0a7a2f;
-      white-space: pre-line;
-      word-break: break-all;
-      min-height: 2em;
+    .footer-note {
+      text-align: center;
+      font-size: 14px;
+      color: #8a5a00;
+      margin-top: 6px;
+      font-weight: 700;
+    }
+
+    .emoji-row {
+      text-align: center;
+      font-size: 26px;
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 480px) {
+      .header h1 {
+        font-size: 28px;
+      }
+
+      .button-row {
+        grid-template-columns: 1fr;
+      }
+
+      #result {
+        font-size: 26px;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>🍴 社食レジ</h1>
+  <div class="container">
+    <div class="header">
+      <div class="emoji-row">🍴✨📱✨</div>
+      <h1>社食レジ</h1>
+      <p>QRコードをかざして受付してね！</p>
+    </div>
 
-  <div id="controls">
-    <div>
+    <div class="card">
+      <label class="label" for="cameraSelect">📷 カメラをえらぶ</label>
       <select id="cameraSelect">
         <option>カメラを読み込み中...</option>
       </select>
+
+      <div class="button-row">
+        <button id="startBtn" class="start-btn">読み取りスタート</button>
+        <button id="stopBtn" class="stop-btn">ストップ</button>
+      </div>
     </div>
-    <div>
-      <button id="startBtn">QR読み取り開始</button>
-      <button id="stopBtn">停止</button>
+
+    <div class="card status-card">
+      <div id="msg" class="status-badge">カメラを選んで開始してね</div>
+    </div>
+
+    <div class="card result-card">
+      <div id="result"></div>
+    </div>
+
+    <div class="card reader-card">
+      <div id="reader"></div>
+    </div>
+
+    <div class="footer-note">
+      読み取り後は自動で次の受付待ちになるよ
     </div>
   </div>
-
-  <div id="reader"></div>
-  <p id="msg">カメラを選んで開始してください</p>
-  <div id="result"></div>
 
   <script>
     const GAS_URL = "https://script.google.com/macros/s/AKfycbwuHOAN8M8YdYFo7Wpex9wzEP5QRVsksSDKOuyq3Tyo1nBo6riHLrVs-9MADrZa-yvA/exec";
@@ -84,6 +240,67 @@
     let isRunning = false;
     let isProcessing = false;
     let resetTimer = null;
+    let audioContext = null;
+
+    function initAudio() {
+      if (!audioContext) {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (AudioCtx) {
+          audioContext = new AudioCtx();
+        }
+      }
+      if (audioContext && audioContext.state === "suspended") {
+        audioContext.resume().catch(() => {});
+      }
+    }
+
+    function playSuccessSound() {
+      if (!audioContext) return;
+
+      const now = audioContext.currentTime;
+
+      const osc1 = audioContext.createOscillator();
+      const gain1 = audioContext.createGain();
+      osc1.type = "sine";
+      osc1.frequency.setValueAtTime(880, now);
+      gain1.gain.setValueAtTime(0.0001, now);
+      gain1.gain.exponentialRampToValueAtTime(0.18, now + 0.02);
+      gain1.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
+      osc1.connect(gain1);
+      gain1.connect(audioContext.destination);
+      osc1.start(now);
+      osc1.stop(now + 0.2);
+
+      const osc2 = audioContext.createOscillator();
+      const gain2 = audioContext.createGain();
+      osc2.type = "sine";
+      osc2.frequency.setValueAtTime(1318, now + 0.12);
+      gain2.gain.setValueAtTime(0.0001, now + 0.12);
+      gain2.gain.exponentialRampToValueAtTime(0.16, now + 0.14);
+      gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.32);
+      osc2.connect(gain2);
+      gain2.connect(audioContext.destination);
+      osc2.start(now + 0.12);
+      osc2.stop(now + 0.34);
+    }
+
+    function setStatus(text, mode = "normal") {
+      msg.innerText = text;
+
+      if (mode === "success") {
+        msg.style.background = "#d9ffd6";
+        msg.style.color = "#18794e";
+      } else if (mode === "error") {
+        msg.style.background = "#ffd9de";
+        msg.style.color = "#b42318";
+      } else if (mode === "loading") {
+        msg.style.background = "#fff1a8";
+        msg.style.color = "#8a5a00";
+      } else {
+        msg.style.background = "#fff3b0";
+        msg.style.color = "#8a5a00";
+      }
+    }
 
     async function sendToGas(employeeId) {
       const controller = new AbortController();
@@ -108,14 +325,14 @@
 
     async function loadCameras() {
       try {
-        msg.innerText = "カメラ一覧を取得しています...";
+        setStatus("カメラ一覧を取得中...", "loading");
 
         const devices = await Html5Qrcode.getCameras();
         cameraSelect.innerHTML = "";
 
         if (!devices || devices.length === 0) {
           cameraSelect.innerHTML = "<option>カメラが見つかりません</option>";
-          msg.innerText = "❌ カメラが見つかりません";
+          setStatus("カメラが見つかりません", "error");
           return;
         }
 
@@ -128,10 +345,10 @@
           cameraSelect.appendChild(option);
         });
 
-        msg.innerText = "カメラを選んで開始してください";
+        setStatus("カメラを選んで開始してね");
       } catch (err) {
         console.error(err);
-        msg.innerText = "❌ カメラ一覧の取得に失敗しました: " + err.name;
+        setStatus("カメラ取得に失敗しました", "error");
       }
     }
 
@@ -140,26 +357,28 @@
 
       resetTimer = setTimeout(() => {
         result.innerText = "";
-        msg.innerText = "次のQRを読み取ってください";
+        setStatus("次のQRをどうぞ");
         isProcessing = false;
       }, 2500);
     }
 
     async function startScanner() {
       try {
+        initAudio();
+
         if (isRunning) {
-          msg.innerText = "すでに読み取り中です";
+          setStatus("すでに読み取り中です");
           return;
         }
 
         const cameraId = cameraSelect.value;
         if (!cameraId) {
-          msg.innerText = "❌ カメラを選んでください";
+          setStatus("カメラを選んでください", "error");
           return;
         }
 
         result.innerText = "";
-        msg.innerText = "カメラを起動しています...";
+        setStatus("カメラを起動中...", "loading");
 
         if (!html5QrCode) {
           html5QrCode = new Html5Qrcode("reader");
@@ -177,42 +396,42 @@
 
             try {
               result.innerText = "読み取りました";
-              msg.innerText = "送信しています...";
+              setStatus("登録中...", "loading");
 
               const res = await sendToGas(decodedText);
 
               if (res.ok) {
-                result.innerText = "登録しました";
-                msg.innerText = "✅ 登録完了";
+                result.innerText = "登録しました 🎉";
+                setStatus("登録完了", "success");
+                playSuccessSound();
               } else {
                 result.innerText = "";
-                msg.innerText = "❌ 登録できませんでした";
+                setStatus("登録できませんでした", "error");
               }
             } catch (err) {
               console.error(err);
               result.innerText = "";
-              msg.innerText = "❌ 登録できませんでした";
+              setStatus("登録できませんでした", "error");
             } finally {
               scheduleReset();
             }
           },
           () => {
-            // 読み取り失敗時は何もしない
           }
         );
 
         isRunning = true;
-        msg.innerText = "QRを読み取ってください";
+        setStatus("QRを読み取ってね");
       } catch (err) {
         console.error(err);
-        msg.innerText = "❌ エラー: " + err.name;
+        setStatus("カメラ起動エラー", "error");
       }
     }
 
     async function stopScanner() {
       try {
         if (!html5QrCode || !isRunning) {
-          msg.innerText = "停止中です";
+          setStatus("停止中です");
           return;
         }
 
@@ -226,10 +445,10 @@
         }
 
         result.innerText = "";
-        msg.innerText = "⏹ 停止しました";
+        setStatus("停止しました");
       } catch (err) {
         console.error(err);
-        msg.innerText = "❌ 停止エラー: " + err.name;
+        setStatus("停止エラー", "error");
       }
     }
 
