@@ -13,288 +13,262 @@
 
     html, body {
       margin: 0;
-      padding: 0;
       width: 100%;
       height: 100%;
       overflow: hidden;
       font-family: "Hiragino Maru Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
-      background:
-        radial-gradient(circle at top left, #ffe08a 0%, transparent 22%),
-        radial-gradient(circle at top right, #ffb3c7 0%, transparent 25%),
-        radial-gradient(circle at bottom left, #9be7ff 0%, transparent 22%),
-        linear-gradient(180deg, #fff8e7 0%, #ffeef5 100%);
-      color: #5b3b00;
+      background: #f7f3ea;
+      color: #2f241a;
     }
 
     body {
       display: flex;
-      align-items: stretch;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .screen {
+      width: 100%;
+      max-width: 700px;
+      height: 100vh;
+      padding: 14px 18px 18px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      background: var(--bg, #f7f3ea);
+      transition: background 0.25s ease;
+    }
+
+    .screen.state-normal {
+      --bg: #f7f3ea;
+    }
+
+    .screen.state-success {
+      --bg: #d8ef2d;
+    }
+
+    .screen.state-error {
+      --bg: #ef533f;
+    }
+
+    .screen.state-duplicate {
+      --bg: #efc94a;
+    }
+
+    .topbar {
+      text-align: center;
+      padding-top: 4px;
+    }
+
+    .message {
+      font-size: 34px;
+      font-weight: 800;
+      line-height: 1.25;
+      white-space: pre-line;
+      letter-spacing: 0.02em;
+      margin: 0;
+    }
+
+    .submessage {
+      margin-top: 8px;
+      font-size: 18px;
+      font-weight: 700;
+      opacity: 0.9;
+      min-height: 28px;
+    }
+
+    .main {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 0;
+    }
+
+    .reader-wrap {
+      width: min(78vw, 430px);
+      height: min(78vw, 430px);
+      position: relative;
+      display: flex;
+      align-items: center;
       justify-content: center;
     }
 
-    .container {
+    #reader {
       width: 100%;
-      max-width: 560px;
-      height: 100vh;
-      padding: 10px 12px 12px;
+      height: 100%;
+      overflow: hidden;
+      background: #78c8ef;
+      border-radius: 4px;
+      position: relative;
+    }
+
+    #reader video {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+      border-radius: 4px;
+    }
+
+    .corner {
+      position: absolute;
+      width: 34px;
+      height: 34px;
+      border-color: #5d4c3b;
+      border-style: solid;
+      border-width: 0;
+      pointer-events: none;
+    }
+
+    .corner.tl {
+      top: -10px;
+      left: -10px;
+      border-top-width: 5px;
+      border-left-width: 5px;
+      border-top-left-radius: 10px;
+    }
+
+    .corner.tr {
+      top: -10px;
+      right: -10px;
+      border-top-width: 5px;
+      border-right-width: 5px;
+      border-top-right-radius: 10px;
+    }
+
+    .corner.bl {
+      bottom: -10px;
+      left: -10px;
+      border-bottom-width: 5px;
+      border-left-width: 5px;
+      border-bottom-left-radius: 10px;
+    }
+
+    .corner.br {
+      bottom: -10px;
+      right: -10px;
+      border-bottom-width: 5px;
+      border-right-width: 5px;
+      border-bottom-right-radius: 10px;
+    }
+
+    .bottom {
       display: grid;
-      grid-template-rows: auto auto auto 1fr auto;
-      gap: 10px;
+      grid-template-columns: 1fr auto auto;
+      gap: 8px;
+      align-items: end;
+      padding-bottom: env(safe-area-inset-bottom);
     }
 
-    .header {
-      text-align: center;
-    }
-
-    .emoji-row {
-      font-size: 20px;
-      line-height: 1.1;
-      margin-bottom: 2px;
-    }
-
-    .header h1 {
-      margin: 0;
-      font-size: 28px;
-      line-height: 1.1;
-      color: #ff6b6b;
-      text-shadow: 0 2px 0 #fff;
-    }
-
-    .header p {
-      margin: 4px 0 0;
-      font-size: 13px;
-      color: #7a5a00;
+    select, button {
+      border: 2px solid #4f4338;
+      background: rgba(255,255,255,0.72);
+      color: #2f241a;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 15px;
       font-weight: 700;
-    }
-
-    .card {
-      background: rgba(255,255,255,0.85);
-      backdrop-filter: blur(6px);
-      border: 3px solid #fff;
-      border-radius: 20px;
-      padding: 12px;
-      box-shadow: 0 8px 18px rgba(255, 107, 107, 0.14);
-    }
-
-    .controls-card {
-      padding: 10px;
-    }
-
-    .label {
-      display: block;
-      font-size: 13px;
-      font-weight: 800;
-      margin-bottom: 6px;
-      color: #ff6b6b;
+      min-height: 46px;
     }
 
     select {
       width: 100%;
-      border: 3px solid #ffd166;
-      border-radius: 14px;
-      padding: 10px 12px;
-      font-size: 15px;
-      background: #fffdf7;
-      color: #5b3b00;
-      font-weight: 700;
-      outline: none;
-    }
-
-    .button-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-top: 8px;
+      min-width: 0;
     }
 
     button {
-      border: none;
-      border-radius: 14px;
-      padding: 12px 10px;
-      font-size: 16px;
-      font-weight: 800;
       cursor: pointer;
-      transition: transform 0.05s ease, box-shadow 0.1s ease;
-      box-shadow: 0 5px 0 rgba(0,0,0,0.08);
+      min-width: 86px;
     }
 
-    button:active {
-      transform: translateY(2px);
-      box-shadow: 0 2px 0 rgba(0,0,0,0.08);
-    }
-
-    .start-btn {
-      background: linear-gradient(180deg, #7ee787 0%, #2ecc71 100%);
-      color: #fff;
-    }
-
-    .stop-btn {
-      background: linear-gradient(180deg, #ffd6a5 0%, #ffad66 100%);
-      color: #7a3900;
-    }
-
-    .status-card {
-      text-align: center;
-      padding: 12px;
-      border-width: 4px;
-      transition: background 0.2s ease, border-color 0.2s ease;
-    }
-
-    .status-badge {
-      display: inline-block;
-      width: 100%;
-      padding: 10px 12px;
+    .result-pill {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,0.82);
+      border: 2px solid #4f4338;
       border-radius: 999px;
-      font-size: 18px;
-      font-weight: 900;
-      background: #fff3b0;
-      color: #8a5a00;
-      border: 3px solid #fff;
-    }
-
-    .result-card {
+      padding: 8px 14px;
+      font-size: 15px;
+      font-weight: 800;
+      max-width: 90%;
       text-align: center;
-      min-height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(180deg, #ffffff 0%, #fff8ef 100%);
-    }
-
-    #result {
-      font-size: 24px;
-      font-weight: 900;
-      color: #00a896;
-      white-space: pre-line;
-      word-break: break-word;
-      text-shadow: 0 2px 0 #fff;
-    }
-
-    .reader-card {
-      padding: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      white-space: nowrap;
       overflow: hidden;
-      min-height: 0;
+      text-overflow: ellipsis;
     }
 
-    #reader {
-  width: 100%;
-  max-width: 460px;
-  height: min(52vh, 460px);
-  overflow: hidden;
-  border-radius: 18px;
-}
-
-#reader video {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: contain !important;
-}
-
-    .footer-note {
-      text-align: center;
-      font-size: 12px;
-      color: #8a5a00;
-      font-weight: 700;
-      padding-bottom: env(safe-area-inset-bottom);
+    .hidden {
+      display: none;
     }
 
-    .status-normal {
-      border-color: #ffffff;
-    }
-
-    .status-success {
-      border-color: #86efac;
-      background: rgba(220, 252, 231, 0.92);
-    }
-
-    .status-error {
-      border-color: #fca5a5;
-      background: rgba(254, 226, 226, 0.92);
-    }
-
-    .status-duplicate {
-      border-color: #facc15;
-      background: rgba(254, 249, 195, 0.96);
-    }
-
-    .status-loading {
-      border-color: #fde68a;
-      background: rgba(254, 243, 199, 0.96);
-    }
-
-    @media (max-height: 780px) {
-      .container {
-        gap: 8px;
-        padding: 8px 10px 10px;
+    @media (max-width: 640px) {
+      .screen {
+        padding: 10px 12px 12px;
       }
 
-      .header h1 {
-        font-size: 24px;
+      .message {
+        font-size: 28px;
       }
 
-      .header p {
-        font-size: 12px;
-      }
-
-      #result {
-        font-size: 22px;
-      }
-
-      .status-badge {
+      .submessage {
         font-size: 16px;
+      }
+
+      .reader-wrap {
+        width: min(82vw, 380px);
+        height: min(82vw, 380px);
+      }
+
+      .bottom {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      select {
+        grid-column: 1 / -1;
       }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <div class="emoji-row">🍴✨📱✨</div>
-      <h1>社食レジ</h1>
-      <p>QRコードをかざして受付してね！</p>
+  <div id="screen" class="screen state-normal">
+    <div class="topbar">
+      <p id="message" class="message">社員情報を
+よみこんでね ☺</p>
+      <div id="submessage" class="submessage"></div>
     </div>
 
-    <div class="card controls-card">
-      <label class="label" for="cameraSelect">📷 カメラをえらぶ</label>
-      <select id="cameraSelect">
-        <option>カメラを読み込み中...</option>
-      </select>
+    <div class="main">
+      <div class="reader-wrap">
+        <div id="reader"></div>
 
-      <div class="button-row">
-        <button id="startBtn" class="start-btn">読み取りスタート</button>
-        <button id="stopBtn" class="stop-btn">ストップ</button>
+        <div class="corner tl"></div>
+        <div class="corner tr"></div>
+        <div class="corner bl"></div>
+        <div class="corner br"></div>
+
+        <div id="resultPill" class="result-pill hidden"></div>
       </div>
     </div>
 
-    <div id="statusCard" class="card status-card status-normal">
-      <div id="msg" class="status-badge">カメラを選んで開始してね</div>
-    </div>
-
-    <div class="card result-card">
-      <div id="result"></div>
-    </div>
-
-    <div class="card reader-card">
-      <div id="reader"></div>
-    </div>
-
-    <div class="footer-note">
-      読み取り後は自動で次の受付待ちになるよ
+    <div class="bottom">
+      <select id="cameraSelect">
+        <option>カメラを読み込み中...</option>
+      </select>
+      <button id="startBtn">開始</button>
+      <button id="stopBtn">停止</button>
     </div>
   </div>
 
   <script>
     const GAS_URL = "https://script.google.com/macros/s/AKfycbwuHOAN8M8YdYFo7Wpex9wzEP5QRVsksSDKOuyq3Tyo1nBo6riHLrVs-9MADrZa-yvA/exec";
 
+    const screen = document.getElementById("screen");
+    const message = document.getElementById("message");
+    const submessage = document.getElementById("submessage");
+    const resultPill = document.getElementById("resultPill");
     const cameraSelect = document.getElementById("cameraSelect");
     const startBtn = document.getElementById("startBtn");
     const stopBtn = document.getElementById("stopBtn");
-    const msg = document.getElementById("msg");
-    const result = document.getElementById("result");
-    const statusCard = document.getElementById("statusCard");
 
     let html5QrCode = null;
     let isRunning = false;
@@ -303,24 +277,23 @@
     let audioContext = null;
 
     function initAudio() {
-  const AudioCtx = window.AudioContext || window.webkitAudioContext;
-  if (!AudioCtx) return;
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
 
-  if (!audioContext) {
-    audioContext = new AudioCtx();
-  }
+      if (!audioContext) {
+        audioContext = new AudioCtx();
+      }
 
-  if (audioContext.state === "suspended") {
-    audioContext.resume().catch(() => {});
-  }
+      if (audioContext.state === "suspended") {
+        audioContext.resume().catch(() => {});
+      }
 
-  // 無音の短いバッファで解放を安定させる
-  const buffer = audioContext.createBuffer(1, 1, 22050);
-  const source = audioContext.createBufferSource();
-  source.buffer = buffer;
-  source.connect(audioContext.destination);
-  source.start(0);
-}
+      const buffer = audioContext.createBuffer(1, 1, 22050);
+      const source = audioContext.createBufferSource();
+      source.buffer = buffer;
+      source.connect(audioContext.destination);
+      source.start(0);
+    }
 
     function beep(freq, start, duration, volume, type = "sine") {
       if (!audioContext) return;
@@ -343,51 +316,62 @@
     }
 
     function playSuccessSound() {
-  if (!audioContext) return;
-  const now = audioContext.currentTime;
-  beep(1046, now, 0.12, 0.35, "triangle");
-  beep(1568, now + 0.10, 0.18, 0.30, "triangle");
-}
-
-function playErrorSound() {
-  if (!audioContext) return;
-  const now = audioContext.currentTime;
-  beep(320, now, 0.16, 0.28, "sawtooth");
-  beep(220, now + 0.12, 0.22, 0.28, "sawtooth");
-}
+      if (!audioContext) return;
+      const now = audioContext.currentTime;
+      beep(1046, now, 0.12, 0.5, "triangle");
+      beep(1568, now + 0.10, 0.2, 0.42, "triangle");
+    }
 
     function playErrorSound() {
       if (!audioContext) return;
       const now = audioContext.currentTime;
-      beep(340, now, 0.18, 0.18, "sawtooth");
-      beep(240, now + 0.14, 0.24, 0.18, "sawtooth");
+      beep(320, now, 0.18, 0.42, "sawtooth");
+      beep(220, now + 0.12, 0.22, 0.42, "sawtooth");
     }
 
-    function setStatus(text, mode = "normal") {
-      msg.innerText = text;
-      statusCard.className = "card status-card";
+    function setScreenState(mode) {
+      screen.className = "screen";
+      screen.classList.add(`state-${mode}`);
+    }
 
-      if (mode === "success") {
-        statusCard.classList.add("status-success");
-        msg.style.background = "#d9ffd6";
-        msg.style.color = "#18794e";
-      } else if (mode === "error") {
-        statusCard.classList.add("status-error");
-        msg.style.background = "#ffd9de";
-        msg.style.color = "#b42318";
-      } else if (mode === "duplicate") {
-        statusCard.classList.add("status-duplicate");
-        msg.style.background = "#fff7b3";
-        msg.style.color = "#8a5a00";
-      } else if (mode === "loading") {
-        statusCard.classList.add("status-loading");
-        msg.style.background = "#fff1a8";
-        msg.style.color = "#8a5a00";
-      } else {
-        statusCard.classList.add("status-normal");
-        msg.style.background = "#fff3b0";
-        msg.style.color = "#8a5a00";
-      }
+    function setNormalView() {
+      setScreenState("normal");
+      message.innerText = "社員情報を\nよみこんでね ☺";
+      submessage.innerText = "";
+      resultPill.classList.add("hidden");
+      resultPill.innerText = "";
+    }
+
+    function setLoadingView() {
+      setScreenState("normal");
+      message.innerText = "社員情報を\nよみこんでね ☺";
+      submessage.innerText = "読み取り中...";
+      resultPill.classList.add("hidden");
+      resultPill.innerText = "";
+    }
+
+    function setSuccessView() {
+      setScreenState("success");
+      message.innerText = "よみこみ完了！\nHave a nice day!";
+      submessage.innerText = "";
+      resultPill.classList.remove("hidden");
+      resultPill.innerText = "登録しました";
+    }
+
+    function setErrorView() {
+      setScreenState("error");
+      message.innerText = "ERROR!\nもう1度 かざしてください。";
+      submessage.innerText = "";
+      resultPill.classList.remove("hidden");
+      resultPill.innerText = "登録できませんでした";
+    }
+
+    function setDuplicateView() {
+      setScreenState("duplicate");
+      message.innerText = "今日は登録済みです\nまた あしたも 来てね ☺";
+      submessage.innerText = "";
+      resultPill.classList.remove("hidden");
+      resultPill.innerText = "本日は登録ずみです";
     }
 
     async function sendToGas(employeeId) {
@@ -413,14 +397,11 @@ function playErrorSound() {
 
     async function loadCameras() {
       try {
-        setStatus("カメラ一覧を取得中...", "loading");
-
         const devices = await Html5Qrcode.getCameras();
         cameraSelect.innerHTML = "";
 
         if (!devices || devices.length === 0) {
           cameraSelect.innerHTML = "<option>カメラが見つかりません</option>";
-          setStatus("カメラが見つかりません", "error");
           return;
         }
 
@@ -433,27 +414,21 @@ function playErrorSound() {
           cameraSelect.appendChild(option);
         });
 
-        setStatus("カメラを選んで開始してね");
+        const options = Array.from(cameraSelect.options);
+        const rearOption = options.find(opt => !/front/i.test(opt.textContent));
+        if (rearOption) {
+          cameraSelect.value = rearOption.value;
+        }
       } catch (err) {
         console.error(err);
-        setStatus("カメラ取得に失敗しました", "error");
       }
-      const options = Array.from(cameraSelect.options);
-const rearOption = options.find(opt =>
-  !/front/i.test(opt.textContent)
-);
-if (rearOption) {
-  cameraSelect.value = rearOption.value;
-}
     }
 
     function scheduleReset() {
       if (resetTimer) clearTimeout(resetTimer);
-
       resetTimer = setTimeout(() => {
-        result.innerText = "";
-        setStatus("次のQRをどうぞ");
         isProcessing = false;
+        setNormalView();
       }, 2200);
     }
 
@@ -461,19 +436,12 @@ if (rearOption) {
       try {
         initAudio();
 
-        if (isRunning) {
-          setStatus("すでに読み取り中です");
-          return;
-        }
+        if (isRunning) return;
 
         const cameraId = cameraSelect.value;
-        if (!cameraId) {
-          setStatus("カメラを選んでください", "error");
-          return;
-        }
+        if (!cameraId) return;
 
-        result.innerText = "";
-        setStatus("カメラを起動中...", "loading");
+        setLoadingView();
 
         if (!html5QrCode) {
           html5QrCode = new Html5Qrcode("reader");
@@ -490,51 +458,40 @@ if (rearOption) {
             isProcessing = true;
 
             try {
-              result.innerText = "読み取りました";
-              setStatus("登録中...", "loading");
-
               const res = await sendToGas(decodedText);
 
               if (res.ok) {
-                result.innerText = "登録しました 🎉";
-                setStatus("登録完了", "success");
+                setSuccessView();
                 playSuccessSound();
               } else if (res.code === "ALREADY_CHECKED_IN") {
-                result.innerText = "本日は登録ずみです";
-                setStatus("今日はもう登録ずみです", "duplicate");
+                setDuplicateView();
                 playErrorSound();
               } else {
-                result.innerText = "";
-                setStatus("登録できませんでした", "error");
+                setErrorView();
                 playErrorSound();
               }
             } catch (err) {
               console.error(err);
-              result.innerText = "";
-              setStatus("登録できませんでした", "error");
+              setErrorView();
               playErrorSound();
             } finally {
               scheduleReset();
             }
           },
-          () => {
-          }
+          () => {}
         );
 
         isRunning = true;
-        setStatus("QRを読み取ってね");
+        setNormalView();
       } catch (err) {
         console.error(err);
-        setStatus("カメラ起動エラー", "error");
+        setErrorView();
       }
     }
 
     async function stopScanner() {
       try {
-        if (!html5QrCode || !isRunning) {
-          setStatus("停止中です");
-          return;
-        }
+        if (!html5QrCode || !isRunning) return;
 
         await html5QrCode.stop();
         isRunning = false;
@@ -545,11 +502,9 @@ if (rearOption) {
           resetTimer = null;
         }
 
-        result.innerText = "";
-        setStatus("停止しました");
+        setNormalView();
       } catch (err) {
         console.error(err);
-        setStatus("停止エラー", "error");
       }
     }
 
@@ -560,6 +515,7 @@ if (rearOption) {
 
     stopBtn.addEventListener("click", stopScanner);
 
+    setNormalView();
     loadCameras();
   </script>
 </body>
