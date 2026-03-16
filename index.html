@@ -2,9 +2,8 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>カクイチ社食レジ</title>
-
   <script src="https://unpkg.com/html5-qrcode"></script>
 
   <style>
@@ -12,8 +11,12 @@
       box-sizing: border-box;
     }
 
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
       font-family: "Hiragino Maru Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
       background:
         radial-gradient(circle at top left, #ffe08a 0%, transparent 22%),
@@ -21,59 +24,76 @@
         radial-gradient(circle at bottom left, #9be7ff 0%, transparent 22%),
         linear-gradient(180deg, #fff8e7 0%, #ffeef5 100%);
       color: #5b3b00;
-      min-height: 100vh;
+    }
+
+    body {
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
     }
 
     .container {
+      width: 100%;
       max-width: 560px;
-      margin: 0 auto;
-      padding: 20px 16px 40px;
+      height: 100vh;
+      padding: 10px 12px 12px;
+      display: grid;
+      grid-template-rows: auto auto auto 1fr auto;
+      gap: 10px;
     }
 
     .header {
       text-align: center;
-      margin-bottom: 18px;
+    }
+
+    .emoji-row {
+      font-size: 20px;
+      line-height: 1.1;
+      margin-bottom: 2px;
     }
 
     .header h1 {
       margin: 0;
-      font-size: 34px;
-      line-height: 1.2;
+      font-size: 28px;
+      line-height: 1.1;
       color: #ff6b6b;
       text-shadow: 0 2px 0 #fff;
     }
 
     .header p {
-      margin: 10px 0 0;
-      font-size: 15px;
+      margin: 4px 0 0;
+      font-size: 13px;
       color: #7a5a00;
       font-weight: 700;
     }
 
     .card {
-      background: #ffffffcc;
+      background: rgba(255,255,255,0.85);
       backdrop-filter: blur(6px);
       border: 3px solid #fff;
-      border-radius: 24px;
-      padding: 18px;
-      box-shadow: 0 10px 24px rgba(255, 107, 107, 0.18);
-      margin-bottom: 16px;
+      border-radius: 20px;
+      padding: 12px;
+      box-shadow: 0 8px 18px rgba(255, 107, 107, 0.14);
+    }
+
+    .controls-card {
+      padding: 10px;
     }
 
     .label {
       display: block;
-      font-size: 15px;
+      font-size: 13px;
       font-weight: 800;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       color: #ff6b6b;
     }
 
     select {
       width: 100%;
       border: 3px solid #ffd166;
-      border-radius: 16px;
-      padding: 14px 16px;
-      font-size: 16px;
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-size: 15px;
       background: #fffdf7;
       color: #5b3b00;
       font-weight: 700;
@@ -83,24 +103,24 @@
     .button-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 14px;
+      gap: 8px;
+      margin-top: 8px;
     }
 
     button {
       border: none;
-      border-radius: 18px;
-      padding: 16px 16px;
-      font-size: 18px;
+      border-radius: 14px;
+      padding: 12px 10px;
+      font-size: 16px;
       font-weight: 800;
       cursor: pointer;
-      transition: transform 0.05s ease, opacity 0.2s ease;
-      box-shadow: 0 6px 0 rgba(0,0,0,0.08);
+      transition: transform 0.05s ease, box-shadow 0.1s ease;
+      box-shadow: 0 5px 0 rgba(0,0,0,0.08);
     }
 
     button:active {
       transform: translateY(2px);
-      box-shadow: 0 3px 0 rgba(0,0,0,0.08);
+      box-shadow: 0 2px 0 rgba(0,0,0,0.08);
     }
 
     .start-btn {
@@ -115,15 +135,17 @@
 
     .status-card {
       text-align: center;
-      padding: 18px;
+      padding: 12px;
+      border-width: 4px;
+      transition: background 0.2s ease, border-color 0.2s ease;
     }
 
     .status-badge {
       display: inline-block;
-      min-width: 220px;
-      padding: 12px 18px;
+      width: 100%;
+      padding: 10px 12px;
       border-radius: 999px;
-      font-size: 19px;
+      font-size: 18px;
       font-weight: 900;
       background: #fff3b0;
       color: #8a5a00;
@@ -132,7 +154,7 @@
 
     .result-card {
       text-align: center;
-      min-height: 110px;
+      min-height: 64px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -140,7 +162,7 @@
     }
 
     #result {
-      font-size: 30px;
+      font-size: 24px;
       font-weight: 900;
       color: #00a896;
       white-space: pre-line;
@@ -148,44 +170,75 @@
       text-shadow: 0 2px 0 #fff;
     }
 
-    #reader {
-      width: 100%;
-      max-width: 420px;
-      margin: 0 auto;
+    .reader-card {
+      padding: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       overflow: hidden;
-      border-radius: 20px;
+      min-height: 0;
     }
 
-    .reader-card {
-      padding: 14px;
-      background: linear-gradient(180deg, #ffffff 0%, #eefcff 100%);
+    #reader {
+      width: 100%;
+      max-width: 460px;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      border-radius: 18px;
     }
 
     .footer-note {
       text-align: center;
-      font-size: 14px;
+      font-size: 12px;
       color: #8a5a00;
-      margin-top: 6px;
       font-weight: 700;
+      padding-bottom: env(safe-area-inset-bottom);
     }
 
-    .emoji-row {
-      text-align: center;
-      font-size: 26px;
-      margin-bottom: 8px;
+    .status-normal {
+      border-color: #ffffff;
     }
 
-    @media (max-width: 480px) {
-      .header h1 {
-        font-size: 28px;
+    .status-success {
+      border-color: #86efac;
+      background: rgba(220, 252, 231, 0.92);
+    }
+
+    .status-error {
+      border-color: #fca5a5;
+      background: rgba(254, 226, 226, 0.92);
+    }
+
+    .status-duplicate {
+      border-color: #facc15;
+      background: rgba(254, 249, 195, 0.96);
+    }
+
+    .status-loading {
+      border-color: #fde68a;
+      background: rgba(254, 243, 199, 0.96);
+    }
+
+    @media (max-height: 780px) {
+      .container {
+        gap: 8px;
+        padding: 8px 10px 10px;
       }
 
-      .button-row {
-        grid-template-columns: 1fr;
+      .header h1 {
+        font-size: 24px;
+      }
+
+      .header p {
+        font-size: 12px;
       }
 
       #result {
-        font-size: 26px;
+        font-size: 22px;
+      }
+
+      .status-badge {
+        font-size: 16px;
       }
     }
   </style>
@@ -198,7 +251,7 @@
       <p>QRコードをかざして受付してね！</p>
     </div>
 
-    <div class="card">
+    <div class="card controls-card">
       <label class="label" for="cameraSelect">📷 カメラをえらぶ</label>
       <select id="cameraSelect">
         <option>カメラを読み込み中...</option>
@@ -210,7 +263,7 @@
       </div>
     </div>
 
-    <div class="card status-card">
+    <div id="statusCard" class="card status-card status-normal">
       <div id="msg" class="status-badge">カメラを選んで開始してね</div>
     </div>
 
@@ -235,6 +288,7 @@
     const stopBtn = document.getElementById("stopBtn");
     const msg = document.getElementById("msg");
     const result = document.getElementById("result");
+    const statusCard = document.getElementById("statusCard");
 
     let html5QrCode = null;
     let isRunning = false;
@@ -243,60 +297,74 @@
     let audioContext = null;
 
     function initAudio() {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+
       if (!audioContext) {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        if (AudioCtx) {
-          audioContext = new AudioCtx();
-        }
+        audioContext = new AudioCtx();
       }
-      if (audioContext && audioContext.state === "suspended") {
+
+      if (audioContext.state === "suspended") {
         audioContext.resume().catch(() => {});
       }
     }
 
-    function playSuccessSound() {
+    function beep(freq, start, duration, volume, type = "sine") {
       if (!audioContext) return;
 
+      const osc = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, start);
+
+      gain.gain.setValueAtTime(0.0001, start);
+      gain.gain.exponentialRampToValueAtTime(volume, start + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+
+      osc.connect(gain);
+      gain.connect(audioContext.destination);
+
+      osc.start(start);
+      osc.stop(start + duration + 0.02);
+    }
+
+    function playSuccessSound() {
+      if (!audioContext) return;
       const now = audioContext.currentTime;
+      beep(880, now, 0.14, 0.22, "triangle");
+      beep(1320, now + 0.12, 0.18, 0.18, "triangle");
+    }
 
-      const osc1 = audioContext.createOscillator();
-      const gain1 = audioContext.createGain();
-      osc1.type = "sine";
-      osc1.frequency.setValueAtTime(880, now);
-      gain1.gain.setValueAtTime(0.0001, now);
-      gain1.gain.exponentialRampToValueAtTime(0.18, now + 0.02);
-      gain1.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
-      osc1.connect(gain1);
-      gain1.connect(audioContext.destination);
-      osc1.start(now);
-      osc1.stop(now + 0.2);
-
-      const osc2 = audioContext.createOscillator();
-      const gain2 = audioContext.createGain();
-      osc2.type = "sine";
-      osc2.frequency.setValueAtTime(1318, now + 0.12);
-      gain2.gain.setValueAtTime(0.0001, now + 0.12);
-      gain2.gain.exponentialRampToValueAtTime(0.16, now + 0.14);
-      gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.32);
-      osc2.connect(gain2);
-      gain2.connect(audioContext.destination);
-      osc2.start(now + 0.12);
-      osc2.stop(now + 0.34);
+    function playErrorSound() {
+      if (!audioContext) return;
+      const now = audioContext.currentTime;
+      beep(340, now, 0.18, 0.18, "sawtooth");
+      beep(240, now + 0.14, 0.24, 0.18, "sawtooth");
     }
 
     function setStatus(text, mode = "normal") {
       msg.innerText = text;
+      statusCard.className = "card status-card";
 
       if (mode === "success") {
+        statusCard.classList.add("status-success");
         msg.style.background = "#d9ffd6";
         msg.style.color = "#18794e";
       } else if (mode === "error") {
+        statusCard.classList.add("status-error");
         msg.style.background = "#ffd9de";
         msg.style.color = "#b42318";
+      } else if (mode === "duplicate") {
+        statusCard.classList.add("status-duplicate");
+        msg.style.background = "#fff7b3";
+        msg.style.color = "#8a5a00";
       } else if (mode === "loading") {
+        statusCard.classList.add("status-loading");
         msg.style.background = "#fff1a8";
         msg.style.color = "#8a5a00";
       } else {
+        statusCard.classList.add("status-normal");
         msg.style.background = "#fff3b0";
         msg.style.color = "#8a5a00";
       }
@@ -359,7 +427,7 @@
         result.innerText = "";
         setStatus("次のQRをどうぞ");
         isProcessing = false;
-      }, 2500);
+      }, 2200);
     }
 
     async function startScanner() {
@@ -388,7 +456,7 @@
           cameraId,
           {
             fps: 10,
-            qrbox: 250
+            qrbox: 280
           },
           async (decodedText) => {
             if (isProcessing) return;
@@ -404,14 +472,20 @@
                 result.innerText = "登録しました 🎉";
                 setStatus("登録完了", "success");
                 playSuccessSound();
+              } else if (res.code === "ALREADY_CHECKED_IN") {
+                result.innerText = "本日は登録ずみです";
+                setStatus("今日はもう登録ずみです", "duplicate");
+                playErrorSound();
               } else {
                 result.innerText = "";
                 setStatus("登録できませんでした", "error");
+                playErrorSound();
               }
             } catch (err) {
               console.error(err);
               result.innerText = "";
               setStatus("登録できませんでした", "error");
+              playErrorSound();
             } finally {
               scheduleReset();
             }
@@ -452,7 +526,11 @@
       }
     }
 
-    startBtn.addEventListener("click", startScanner);
+    startBtn.addEventListener("click", () => {
+      initAudio();
+      startScanner();
+    });
+
     stopBtn.addEventListener("click", stopScanner);
 
     loadCameras();
